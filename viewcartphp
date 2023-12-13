@@ -1,0 +1,40 @@
+<?php
+
+// Connect to the database
+$db = new PDO('mysql:host=localhost;dbname=pet', 'root', 'siddhant123');
+
+// Get the items in the cart
+$sql = 'SELECT * FROM cart';
+$stmt = $db->prepare($sql);
+$stmt->execute();
+$cartItems = $stmt->fetchAll();
+
+// Display the cart items
+if (count($cartItems) > 0) {
+  echo '<table class="cart-table">';
+  echo '<thead>';
+  echo '<tr>';
+  echo '<th>Product Name</th>';
+  echo '<th>Price</th>';
+  echo '<th>Quantity</th>';
+  echo '<th>Total</th>';
+  echo '<th>Remove</th>';
+  echo '</tr>';
+  echo '</thead>';
+  echo '<tbody>';
+  foreach ($cartItems as $cartItem) {
+    echo '<tr>';
+    echo '<td>' . $cartItem['product_name'] . '</td>';
+    echo '<td>$' . $cartItem['price'] . '</td>';
+    echo '<td>' . $cartItem['quantity'] . '</td>';
+    echo '<td>$' . ($cartItem['price'] * $cartItem['quantity']) . '</td>';
+    echo '<td><a href="remove_from_cart.php?id=' . $cartItem['id'] . '">Remove</a></td>';
+    echo '</tr>';
+  }
+  echo '</tbody>';
+  echo '</table>';
+} else {
+  echo '<p>Your cart is empty.</p>';
+}
+
+?>
